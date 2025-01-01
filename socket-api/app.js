@@ -34,24 +34,29 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // Frontend'in çalıştığı port
+        origin: "http://localhost:5173", // Frontend'in calıstıgı portu vermezsek CORS hatası veriyor.
         methods: ["GET", "POST"],
     },
 });
 
+// Soket baglantısı kuruldugunda çalısması gereken fonksiyon.
 io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);
 
     socket.on("chat message", (data) => {
         console.log("Message received: ", data);
-        io.emit("chat message", data);
+
+        // Mesajı tüm clientlara göndermek için io.emit() fonksiyonunu kullanıyoruz.
+        socket.emit("chat message", data);
     });
 
+    // soket baglantısı kesıldıgında çalısması gereken fonksiyon.
     socket.on("disconnect", () => {
         console.log("User disconnected: " + socket.id);
     });
 });
 
+// Sunucumuzu 3000 portundan dınleyecegını belırtmelıyız.
 server.listen(3000, () => {
     console.log("Server listening on http://localhost:3000");
 });

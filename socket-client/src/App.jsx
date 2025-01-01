@@ -46,13 +46,12 @@ import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import "./App.css";
 
-const socket = io("http://localhost:3000"); // Sunucu bağlantısı
+const socket = io("http://localhost:3000");
 
 function App() {
     const [messagesList, setMessagesList] = useState([]);
     const [message, setMessage] = useState("");
     useEffect(() => {
-        // Yeni mesaj geldiğinde mesaj listesine ekle
         socket.on("chat message", (data) => {
             setMessagesList((prevMessages) => [...prevMessages, data]);
         });
@@ -64,15 +63,14 @@ function App() {
 
     const sendMessage = () => {
         if (message.trim()) {
-            socket.emit("chat message", message); // Mesaj gönder
-            setMessage(""); // Input temizle
+            socket.emit("chat message", message);
         }
     };
 
     return (
         <div className="App">
             <div>
-                <h1>Real-Time Chat</h1>
+                <h1>Socket Chat</h1>
                 <div className="chat-box">
                     {messagesList.map((msg, index) => (
                         <p key={index}>{msg}</p>
@@ -83,7 +81,7 @@ function App() {
                         type="text"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Type a message..."
+                        placeholder="Type a message"
                     />
                     <button type="submit" onClick={sendMessage}>
                         Send
